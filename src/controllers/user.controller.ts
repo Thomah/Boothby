@@ -4,17 +4,14 @@ import {
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
+  del, get,
+  getModelSchemaRef, param,
+  patch, post,
   put,
-  del,
-  requestBody,
+  requestBody
 } from '@loopback/rest';
 import {User} from '../models';
 import {UserRepository} from '../repositories';
@@ -25,7 +22,7 @@ export class UserController {
     public userRepository : UserRepository,
   ) {}
 
-  @post('/users', {
+  @post('/api/users', {
     responses: {
       '200': {
         description: 'User model instance',
@@ -49,7 +46,7 @@ export class UserController {
     return this.userRepository.create(user);
   }
 
-  @get('/users/count', {
+  @get('/api/users/count', {
     responses: {
       '200': {
         description: 'User model count',
@@ -63,7 +60,7 @@ export class UserController {
     return this.userRepository.count(where);
   }
 
-  @get('/users', {
+  @get('/api/users', {
     responses: {
       '200': {
         description: 'Array of User model instances',
@@ -84,7 +81,7 @@ export class UserController {
     return this.userRepository.find(filter);
   }
 
-  @patch('/users', {
+  @patch('/api/users', {
     responses: {
       '200': {
         description: 'User PATCH success count',
@@ -106,7 +103,7 @@ export class UserController {
     return this.userRepository.updateAll(user, where);
   }
 
-  @get('/users/{id}', {
+  @get('/api/users/{id}', {
     responses: {
       '200': {
         description: 'User model instance',
@@ -125,7 +122,7 @@ export class UserController {
     return this.userRepository.findById(id, filter);
   }
 
-  @patch('/users/{id}', {
+  @patch('/api/users/{id}', {
     responses: {
       '204': {
         description: 'User PATCH success',
@@ -146,7 +143,7 @@ export class UserController {
     await this.userRepository.updateById(id, user);
   }
 
-  @put('/users/{id}', {
+  @put('/api/users/{id}', {
     responses: {
       '204': {
         description: 'User PUT success',
@@ -160,7 +157,7 @@ export class UserController {
     await this.userRepository.replaceById(id, user);
   }
 
-  @del('/users/{id}', {
+  @del('/api/users/{id}', {
     responses: {
       '204': {
         description: 'User DELETE success',
