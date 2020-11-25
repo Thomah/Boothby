@@ -1,92 +1,193 @@
 <!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <title>A bot to animate a community through conversations</title>
+<html lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Boothby</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" href="/css/boothby.css" />
+  </head>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon" type="image/x-icon" href="https://loopback.io/favicon.ico">
-
-    <style>
-        h3 {
-            margin-left: 25px;
-            text-align: center;
-        }
-        
-        a,
-        a:visited {
-            color: #3f5dff;
-        }
-        
-        h3 a {
-            margin-left: 10px;
-        }
-        
-        a:hover,
-        a:focus,
-        a:active {
-            color: #001956;
-        }
-        
-        .power {
-            position: absolute;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        
-        .info {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%)
-        }
-        
-        .info h1 {
-            text-align: center;
-            margin-bottom: 0;
-        }
-        
-        .info p {
-            text-align: center;
-            margin-bottom: 3em;
-            margin-top: 1em;
-        }
-        
-        @media (prefers-color-scheme: dark) {
-            body {
-                background-color: rgb(29, 30, 32);
-                color: white;
-            }
-            a,
-            a:visited {
-                color: #4990e2;
-            }
-            a:hover,
-            a:focus,
-            a:active {
-                color: #2b78ff;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <div class="info">
-        <h1>boothby</h1>
-        <p>Version 2.0.0</p>
-
-        <h3>OpenAPI spec: <a href="/openapi.json">/openapi.json</a></h3>
-        <h3>API Explorer: <a href="/explorer">/explorer</a></h3>
+  <body onload="refresh()">
+    <div class="container">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light static-top">
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#bs-example-navbar-collapse-1"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand" href="#">
+          <img
+            src="/img/Boothby-Icon.png"
+            width="30"
+            height="30"
+            class="d-inline-block align-top"
+            alt="Icone Boothby"
+          />
+          Boothby
+        </a>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="#"
+                >Accueil <span class="sr-only">(page courante)</span></a
+              >
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                href="https://valeuriad-techlab.github.io/Boothby"
+                >Documentation technique</a
+              >
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/explorer">API</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav ml-md-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="https://www.valeuriad.fr"
+                >Valeuriad ></a
+              >
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <div class="row">
+        <div class="col-md-9">
+          <div class="jumbotron">
+            <h2>Et si vous vous mettiez au Green IT ?</h2>
+            <p>
+              Boothby est le seul coach virtuel qui va vous donner envie
+              d'utiliser ou de développer vos applications de façon optimisée et
+              responsable. Disponible sur Slack gratuitement et sans limitation,
+              essayez-le, adoptez-le et joignez-vous à son développement !
+            </p>
+            <p>
+              <a
+                href="https://slack.com/oauth/v2/authorize?client_id=522614420722.521877890336&scope=app_mentions:read,channels:join,channels:read,chat:write,files:write,im:write,incoming-webhook,users:read"
+                ><img
+                  alt="Add to Slack"
+                  height="40"
+                  width="139"
+                  src="https://platform.slack-edge.com/img/add_to_slack.png"
+                  srcset="
+                    https://platform.slack-edge.com/img/add_to_slack.png    1x,
+                    https://platform.slack-edge.com/img/add_to_slack@2x.png 2x
+                  "
+              /></a>
+              <a
+                class="btn btn-secondary btn-large"
+                href="https://github.com/valeuriad-techlab/Boothby"
+                >Voir le repo Git</a
+              >
+            </p>
+          </div>
+        </div>
+        <div class="col-md-3" style="text-align: center">
+          <img alt="Boothby-Photo" src="/img/Boothby-Joyeux.png" width="80%" />
+        </div>
+      </div>
+      <div class="row demo">
+        <div class="col-md-6">
+          <img alt="Boothby-Demo" src="/img/Boothby-Demo.png" width="100%" />
+        </div>
+        <div class="col-md-6">
+          <div class="demo-side">
+            <h2>Animer une communauté</h2>
+            <p>
+              Boothby est accessible à toutes les équipes,
+              <b>qu'elles soient composées d'utilisateurs ou de développeurs</b>
+              (*) et interragit avec elle pour ouvrir et enrichir les
+              discussions autour de l'informatique durable.
+            </p>
+            <p>
+              (*) Des fonctionnalités de filtrage sont en cours d'élaboration
+              pour s'adapter parfaitement à vos activités.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="row details">
+        <div class="col-md-4">
+          <h3>Un projet communautaire</h3>
+          <p>
+            Boothby ce n'est pas la nouvelle campagne marketing d'une entreprise
+            qui veut surfer sur la vague du Green IT et s'offrir une image
+            écolo.
+          </p>
+          <p>
+            L'objectif est d'amener un maximum de professionnels à prendre
+            conscience de leurs impacts dans leur utilisation et l'élaboration
+            des services IT.
+          </p>
+        </div>
+        <div class="col-md-4">
+          <h3>Le monde du logiciel va mal</h3>
+          <p>
+            Si en surface l'informatique n'a jamais été aussi performante,
+            utile, sociale, high tech, en réalité il n'y a jamais eu autant de
+            superflu, d'usage inutiles, d'obsolescence et de "gras" logiciel.
+          </p>
+          <p>
+            Les récentes études le confirme, notamment le manifeste pour un
+            développement durable d'Olivier Philippot. N'hésitez pas à le lire
+            et à le partager autour de vous.
+          </p>
+          <p>
+            <a
+              class="btn"
+              href="https://greenspector.com/fr/articles/2018-12-11-manifeste-developpement-plus-durable/"
+              >Lire le manifeste »</a
+            >
+          </p>
+        </div>
+        <div class="col-md-4">
+          <h3>En cours de développement</h3>
+          <p>
+            De la veille technologique au développement de nouvelles
+            fonctionnalités en passant par la rédaction de publications... il y
+            a encore tant à faire ! Vous souhaitez participer ? Fantastique !
+          </p>
+          <p>Contactez-nous par mail en cliquant sur le bouton suivant.</p>
+          <p>
+            <a class="btn" href="mailto:boothby@valeuriad.fr"
+              >Nous contacter »</a
+            >
+          </p>
+        </div>
+      </div>
+      <div class="row footer">
+        <div class="col-md-12">
+          <p>Fièrement soutenu par Valeuriad. Merci &#60;3</p>
+        </div>
+      </div>
     </div>
 
-    <footer class="power">
-        <a href="https://loopback.io" target="_blank">
-            <img src="https://loopback.io/images/branding/powered-by-loopback/blue/powered-by-loopback-sm.png" />
-        </a>
-    </footer>
-</body>
-
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    <script src="index.js" type="application/javascript"></script>
+  </body>
 </html>
