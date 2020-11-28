@@ -10,8 +10,8 @@ export async function setupApplication(): Promise<AppWithClient> {
     // Customize the server configuration here.
     // Empty values (undefined, '') will be ignored by the helper.
     //
-    // host: process.env.HOST,
-    // port: +process.env.PORT,
+    host: 'localhost',
+    port: 3000,
   });
 
   const app = new BoothbyApplication({
