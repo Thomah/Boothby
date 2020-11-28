@@ -42,6 +42,16 @@ export class BoothbyApplication extends BootMixin(
     this.sequence(MySequence);
 
     // Set up default home page
+    this.static('/vendors/bootstrap/', path.join(__dirname, '../node_modules/bootstrap/dist/css/'));
+    this.static('/vendors/bootstrap/bootstrap.bundle.min.js', path.join(__dirname, '../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js'));
+    this.static('/vendors/fontawesome/all.min.css', path.join(__dirname, '../node_modules/@fortawesome/fontawesome-free/css/all.min.css'));
+    this.static('/vendors/fontawesome/all.min.js', path.join(__dirname, '../node_modules/@fortawesome/fontawesome-free/js/all.min.js'));
+    this.static('/vendors/nprogress/nprogress.css', path.join(__dirname, '../node_modules/nprogress/nprogress.css'));
+    this.static('/vendors/nprogress/nprogress.js', path.join(__dirname, '../node_modules/nprogress/nprogress.js'));
+    this.static('/vendors/jquery/jquery.min.js', path.join(__dirname, '../node_modules/jquery/dist/jquery.min.js'));
+    this.static('/vendors/fastclick/fastclick.js', path.join(__dirname, '../node_modules/fastclick/lib/fastclick.js'));
+    this.static('/vendors/gentelella/custom.min.css', path.join(__dirname, '../node_modules/gentelella/build/css/custom.min.css'));
+    this.static('/vendors/gentelella/custom.min.js', path.join(__dirname, '../node_modules/gentelella/build/js/custom.min.js'));
     this.static('/', path.join(__dirname, '../public'));
 
     // Customize @loopback/rest-explorer configuration here

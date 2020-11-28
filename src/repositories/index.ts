@@ -1,2 +1,4 @@
 export * from './user.repository';
-export * from './workspace.repository';
+export * from './workspace-slack.repository';
+
+export * from './user-slack.repository';

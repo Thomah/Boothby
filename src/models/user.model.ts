@@ -1,13 +1,8 @@
-import {Entity, model, property} from '@loopback/repository';
+import {model, property} from '@loopback/repository';
+import {Identity} from './identity.model';
 
 @model()
-export class User extends Entity {
-  @property({
-    type: 'number',
-    id: true,
-    generated: true,
-  })
-  id?: number;
+export class User extends Identity {
 
   @property({
     type: 'string',
@@ -41,7 +36,6 @@ export class User extends Entity {
     type: 'string',
   })
   avatarUrl?: string;
-
 
   constructor(data?: Partial<User>) {
     super(data);

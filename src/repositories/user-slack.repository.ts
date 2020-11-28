@@ -1,16 +1,16 @@
 import {DefaultCrudRepository} from '@loopback/repository';
-import {Workspace, WorkspaceRelations} from '../models';
+import {UserSlack, UserSlackRelations} from '../models';
 import {DbDataSource} from '../datasources';
 import {inject} from '@loopback/core';
 
-export class WorkspaceRepository extends DefaultCrudRepository<
-  Workspace,
-  typeof Workspace.prototype.id,
-  WorkspaceRelations
+export class UserSlackRepository extends DefaultCrudRepository<
+  UserSlack,
+  typeof UserSlack.prototype.id,
+  UserSlackRelations
 > {
   constructor(
     @inject('datasources.db') dataSource: DbDataSource,
   ) {
-    super(Workspace, dataSource);
+    super(UserSlack, dataSource);
   }
 }
