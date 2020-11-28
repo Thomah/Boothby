@@ -3,7 +3,6 @@ import {Identity} from './identity.model';
 
 @model()
 export class UserSlack extends Identity {
-
   @property({
     type: 'string',
     required: true,
@@ -181,7 +180,6 @@ export class UserSlack extends Identity {
     default: false,
   })
   has2fa?: boolean;
-
 
   constructor(data?: Partial<UserSlack>) {
     super(data);

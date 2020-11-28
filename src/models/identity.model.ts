@@ -9,7 +9,6 @@ export class Identity extends Entity {
   })
   id?: number;
 
-
   constructor(data?: Partial<Identity>) {
     super(data);
   }

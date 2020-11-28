@@ -3,7 +3,6 @@ import {Identity} from './identity.model';
 
 @model()
 export class Workspace extends Identity {
-
   constructor(data?: Partial<Workspace>) {
     super(data);
   }

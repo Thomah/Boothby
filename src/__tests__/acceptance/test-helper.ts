@@ -1,9 +1,9 @@
-import {BoothbyApplication} from '../..';
 import {
+  Client,
   createRestAppClient,
   givenHttpServerConfig,
-  Client,
 } from '@loopback/testlab';
+import {BoothbyApplication} from '../..';
 
 export async function setupApplication(): Promise<AppWithClient> {
   const restConfig = givenHttpServerConfig({

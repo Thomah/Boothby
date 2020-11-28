@@ -6,7 +6,11 @@ import {repository} from '@loopback/repository';
 import {get, getModelSchemaRef, post, requestBody} from '@loopback/rest';
 import {UserProfile} from '@loopback/security';
 import * as _ from 'lodash';
-import {PasswordHasherBindings, TokenServiceBindings, UserServiceBindings} from '../keys';
+import {
+  PasswordHasherBindings,
+  TokenServiceBindings,
+  UserServiceBindings,
+} from '../keys';
 import {User} from '../models';
 import {Credentials, UserRepository} from '../repositories';
 import {validateCredentials} from '../services';
@@ -16,7 +20,6 @@ import {MyUserService} from '../services/user.service';
 import {OPERATION_SECURITY_SPEC} from '../utils/security-spec';
 
 export class AuthController {
-
   constructor(
     @repository(UserRepository)
     public userRepository: UserRepository,
@@ -32,7 +35,6 @@ export class AuthController {
     // @inject('service.jwt.service')
     @inject(TokenServiceBindings.TOKEN_SERVICE)
     public jwtService: JWTService,
-
   ) {}
 
   @post('/api/signup', {
@@ -42,25 +44,28 @@ export class AuthController {
         content: {
           'application/json': {
             schema: getModelSchemaRef(User, {
-              title: 'NewUser'
-            })
-          }
-        }
-      }
-    }
-  })
-  async signup(@requestBody({
-    content: {
-      'application/json': {
-        schema: getModelSchemaRef(User, {
-          title: 'NewUser',
-          exclude: ['id']
-        }),
+              title: 'NewUser',
+            }),
+          },
+        },
       },
     },
-  }) userData: User) {
+  })
+  async signup(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(User, {
+            title: 'NewUser',
+            exclude: ['id'],
+          }),
+        },
+      },
+    })
+    userData: User,
+  ) {
     validateCredentials(_.pick(userData, ['email', 'password']));
-    userData.password = await this.hasher.hashPassword(userData.password)
+    userData.password = await this.hasher.hashPassword(userData.password);
     const savedUser = await this.userRepository.create(userData);
     savedUser.password = '***';
     return savedUser;
@@ -76,14 +81,14 @@ export class AuthController {
               type: 'object',
               properties: {
                 token: {
-                  type: 'string'
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   })
   async login(
     @requestBody({
@@ -93,16 +98,17 @@ export class AuthController {
             type: 'object',
             properties: {
               email: {
-                type: 'string'
+                type: 'string',
               },
               password: {
-                type: 'string'
-              }
-            }
-          }
+                type: 'string',
+              },
+            },
+          },
         },
       },
-    }) credentials: Credentials,
+    })
+    credentials: Credentials,
   ): Promise<{token: string}> {
     // make sure user exist,password should be valid
     const user = await this.userService.verifyCredentials(credentials);
@@ -111,10 +117,10 @@ export class AuthController {
     // console.log(userProfile);
 
     const token = await this.jwtService.generateToken(userProfile);
-    return Promise.resolve({token: token})
+    return Promise.resolve({token: token});
   }
 
-  @authenticate("jwt")
+  @authenticate('jwt')
   @get('/api/whoami', {
     security: OPERATION_SECURITY_SPEC,
     responses: {
@@ -123,12 +129,12 @@ export class AuthController {
         content: {
           'application/json': {
             schema: getModelSchemaRef(User, {
-              title: 'CurrentUser'
-            })
-          }
-        }
-      }
-    }
+              title: 'CurrentUser',
+            }),
+          },
+        },
+      },
+    },
   })
   async me(
     @inject(AuthenticationBindings.CURRENT_USER)
@@ -136,5 +142,4 @@ export class AuthController {
   ): Promise<UserProfile> {
     return Promise.resolve(currentUser);
   }
-
 }

@@ -1,7 +1,11 @@
-import {AuthenticationComponent, registerAuthenticationStrategy} from '@loopback/authentication';
 import {
-  SECURITY_SCHEME_SPEC, User,
-  UserRepository
+  AuthenticationComponent,
+  registerAuthenticationStrategy,
+} from '@loopback/authentication';
+import {
+  SECURITY_SCHEME_SPEC,
+  User,
+  UserRepository,
 } from '@loopback/authentication-jwt';
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig} from '@loopback/core';
@@ -9,13 +13,18 @@ import {RepositoryMixin, SchemaMigrationOptions} from '@loopback/repository';
 import {RestApplication} from '@loopback/rest';
 import {
   RestExplorerBindings,
-  RestExplorerComponent
+  RestExplorerComponent,
 } from '@loopback/rest-explorer';
 import {ServiceMixin} from '@loopback/service-proxy';
 import {genSalt, hash} from 'bcryptjs';
 import path from 'path';
 import {JWTStrategy} from './authentication-strategies/jwt-strategies';
-import {PasswordHasherBindings, TokenServiceBindings, TokenServiceConstants, UserServiceBindings} from './keys';
+import {
+  PasswordHasherBindings,
+  TokenServiceBindings,
+  TokenServiceConstants,
+  UserServiceBindings,
+} from './keys';
 import {MySequence} from './sequence';
 import {BcryptHasher} from './services/hash.password';
 import {JWTService} from './services/jwt.service';
@@ -36,22 +45,64 @@ export class BoothbyApplication extends BootMixin(
     this.addSecuritySpec();
 
     this.component(AuthenticationComponent);
-    registerAuthenticationStrategy(this, JWTStrategy)
+    registerAuthenticationStrategy(this, JWTStrategy);
 
     // Set up the custom sequence
     this.sequence(MySequence);
 
     // Set up default home page
-    this.static('/vendors/bootstrap/', path.join(__dirname, '../node_modules/bootstrap/dist/css/'));
-    this.static('/vendors/bootstrap/bootstrap.bundle.min.js', path.join(__dirname, '../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js'));
-    this.static('/vendors/fontawesome/all.min.css', path.join(__dirname, '../node_modules/@fortawesome/fontawesome-free/css/all.min.css'));
-    this.static('/vendors/fontawesome/all.min.js', path.join(__dirname, '../node_modules/@fortawesome/fontawesome-free/js/all.min.js'));
-    this.static('/vendors/nprogress/nprogress.css', path.join(__dirname, '../node_modules/nprogress/nprogress.css'));
-    this.static('/vendors/nprogress/nprogress.js', path.join(__dirname, '../node_modules/nprogress/nprogress.js'));
-    this.static('/vendors/jquery/jquery.min.js', path.join(__dirname, '../node_modules/jquery/dist/jquery.min.js'));
-    this.static('/vendors/fastclick/fastclick.js', path.join(__dirname, '../node_modules/fastclick/lib/fastclick.js'));
-    this.static('/vendors/gentelella/custom.min.css', path.join(__dirname, '../node_modules/gentelella/build/css/custom.min.css'));
-    this.static('/vendors/gentelella/custom.min.js', path.join(__dirname, '../node_modules/gentelella/build/js/custom.min.js'));
+    this.static(
+      '/vendors/bootstrap/',
+      path.join(__dirname, '../node_modules/bootstrap/dist/css/'),
+    );
+    this.static(
+      '/vendors/bootstrap/bootstrap.bundle.min.js',
+      path.join(
+        __dirname,
+        '../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js',
+      ),
+    );
+    this.static(
+      '/vendors/fontawesome/all.min.css',
+      path.join(
+        __dirname,
+        '../node_modules/@fortawesome/fontawesome-free/css/all.min.css',
+      ),
+    );
+    this.static(
+      '/vendors/fontawesome/all.min.js',
+      path.join(
+        __dirname,
+        '../node_modules/@fortawesome/fontawesome-free/js/all.min.js',
+      ),
+    );
+    this.static(
+      '/vendors/nprogress/nprogress.css',
+      path.join(__dirname, '../node_modules/nprogress/nprogress.css'),
+    );
+    this.static(
+      '/vendors/nprogress/nprogress.js',
+      path.join(__dirname, '../node_modules/nprogress/nprogress.js'),
+    );
+    this.static(
+      '/vendors/jquery/jquery.min.js',
+      path.join(__dirname, '../node_modules/jquery/dist/jquery.min.js'),
+    );
+    this.static(
+      '/vendors/fastclick/fastclick.js',
+      path.join(__dirname, '../node_modules/fastclick/lib/fastclick.js'),
+    );
+    this.static(
+      '/vendors/gentelella/custom.min.css',
+      path.join(
+        __dirname,
+        '../node_modules/gentelella/build/css/custom.min.css',
+      ),
+    );
+    this.static(
+      '/vendors/gentelella/custom.min.js',
+      path.join(__dirname, '../node_modules/gentelella/build/js/custom.min.js'),
+    );
     this.static('/', path.join(__dirname, '../public'));
 
     // Customize @loopback/rest-explorer configuration here
@@ -70,7 +121,6 @@ export class BoothbyApplication extends BootMixin(
         nested: true,
       },
     };
-
   }
 
   async migrateSchema(options?: SchemaMigrationOptions) {
@@ -82,18 +132,22 @@ export class BoothbyApplication extends BootMixin(
     if (!found) {
       const admin = new User({username: 'admin', email: 'admin@boothby.fr'});
       admin.password = await hash('admin', await genSalt());
-      admin.email = 'admin@boothby.fr'
+      admin.email = 'admin@boothby.fr';
       await userRepo.create(admin);
     }
   }
 
   setupBinding(): void {
     this.bind(PasswordHasherBindings.PASSWORD_HASHER).toClass(BcryptHasher);
-    this.bind(PasswordHasherBindings.ROUNDS).to(10)
+    this.bind(PasswordHasherBindings.ROUNDS).to(10);
     this.bind(UserServiceBindings.USER_SERVICE).toClass(MyUserService);
     this.bind(TokenServiceBindings.TOKEN_SERVICE).toClass(JWTService);
-    this.bind(TokenServiceBindings.TOKEN_SECRET).to(TokenServiceConstants.TOKEN_SECRET_VALUE)
-    this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(TokenServiceConstants.TOKEN_EXPIRES_IN_VALUE);
+    this.bind(TokenServiceBindings.TOKEN_SECRET).to(
+      TokenServiceConstants.TOKEN_SECRET_VALUE,
+    );
+    this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(
+      TokenServiceConstants.TOKEN_EXPIRES_IN_VALUE,
+    );
   }
 
   addSecuritySpec(): void {
