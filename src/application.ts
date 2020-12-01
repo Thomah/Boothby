@@ -21,11 +21,13 @@ import path from 'path';
 import {JWTStrategy} from './authentication-strategies/jwt-strategies';
 import {
   PasswordHasherBindings,
+  RandomServiceBindings,
   TokenServiceBindings,
   TokenServiceConstants,
   UserServiceBindings,
 } from './keys';
 import {MySequence} from './sequence';
+import {RandomService} from './services';
 import {BcryptHasher} from './services/hash.password';
 import {JWTService} from './services/jwt.service';
 import {MyUserService} from './services/user.service';
@@ -148,6 +150,7 @@ export class BoothbyApplication extends BootMixin(
     this.bind(TokenServiceBindings.TOKEN_EXPIRES_IN).to(
       TokenServiceConstants.TOKEN_EXPIRES_IN_VALUE,
     );
+    this.bind(RandomServiceBindings.RANDOM_SERVICE).toClass(RandomService);
   }
 
   addSecuritySpec(): void {

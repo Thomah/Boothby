@@ -2,6 +2,7 @@ import {TokenService, UserService} from '@loopback/authentication';
 import {BindingKey} from '@loopback/core';
 import {User} from './models';
 import {Credentials} from './repositories/user.repository';
+import {RandomService} from './services';
 import {PasswordHasher} from './services/hash.password';
 
 export namespace TokenServiceConstants {
@@ -30,5 +31,11 @@ export namespace PasswordHasherBindings {
 export namespace UserServiceBindings {
   export const USER_SERVICE = BindingKey.create<UserService<Credentials, User>>(
     'services.user.service',
+  );
+}
+
+export namespace RandomServiceBindings {
+  export const RANDOM_SERVICE = BindingKey.create<RandomService>(
+    'services.random.service',
   );
 }

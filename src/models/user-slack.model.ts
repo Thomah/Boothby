@@ -1,8 +1,16 @@
-import {model, property} from '@loopback/repository';
-import {Identity} from './identity.model';
+import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {WorkspaceSlack} from './workspace-slack.model';
+import {User} from './user.model';
 
 @model()
-export class UserSlack extends Identity {
+export class UserSlack extends Entity {
+  @property({
+    type: 'number',
+    id: true,
+    generated: true,
+  })
+  id?: number;
+
   @property({
     type: 'string',
     required: true,
@@ -13,173 +21,60 @@ export class UserSlack extends Identity {
     type: 'string',
     required: true,
   })
-  teamId: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
   name: string;
 
   @property({
-    type: 'boolean',
+    type: 'string',
     required: true,
   })
-  deleted: boolean;
+  accessToken: string;
 
   @property({
     type: 'string',
-  })
-  color?: string;
-
-  @property({
-    type: 'string',
-  })
-  realName?: string;
-
-  @property({
-    type: 'string',
-  })
-  tz?: string;
-
-  @property({
-    type: 'string',
-  })
-  tzLabel?: string;
-
-  @property({
-    type: 'number',
-  })
-  tzOffset?: number;
-
-  @property({
-    type: 'string',
-  })
-  profileAvatarHash?: string;
-
-  @property({
-    type: 'string',
-  })
-  profileStatusText?: string;
-
-  @property({
-    type: 'string',
-  })
-  profileStatusEmoji?: string;
-
-  @property({
-    type: 'string',
-  })
-  profileRealName?: string;
-
-  @property({
-    type: 'string',
-  })
-  profileDisplayName?: string;
-
-  @property({
-    type: 'string',
-  })
-  profileRealNameNormalized?: string;
-
-  @property({
-    type: 'string',
-  })
-  profileDisplayNameNormalized?: string;
-
-  @property({
-    type: 'string',
-  })
-  profileEmail?: string;
-
-  @property({
-    type: 'string',
-  })
-  profileImage24?: string;
-
-  @property({
-    type: 'string',
-  })
-  profileImage32?: string;
-
-  @property({
-    type: 'string',
-  })
-  profileImage48?: string;
-
-  @property({
-    type: 'string',
-  })
-  profileImage72?: string;
-
-  @property({
-    type: 'string',
-  })
-  profileImage192?: string;
-
-  @property({
-    type: 'string',
-  })
-  profileImage512?: string;
-
-  @property({
-    type: 'string',
-  })
-  profileTeam?: string;
-
-  @property({
-    type: 'boolean',
-    default: false,
-  })
-  isAdmin?: boolean;
-
-  @property({
-    type: 'boolean',
-    default: false,
-  })
-  isOwner?: boolean;
-
-  @property({
-    type: 'boolean',
-    default: false,
-  })
-  isPrimaryOwner?: boolean;
-
-  @property({
-    type: 'boolean',
-    default: false,
-  })
-  isRestricted?: boolean;
-
-  @property({
-    type: 'boolean',
-    default: false,
-  })
-  isUltraRestricted?: boolean;
-
-  @property({
-    type: 'boolean',
-    default: false,
-  })
-  isBot?: boolean;
-
-  @property({
-    type: 'date',
     required: true,
   })
-  updated: string;
+  scope: string;
 
   @property({
-    type: 'boolean',
-    default: false,
+    type: 'string',
   })
-  isAppUser?: boolean;
+  email?: string;
 
   @property({
-    type: 'boolean',
-    default: false,
+    type: 'string',
   })
-  has2fa?: boolean;
+  image24?: string;
+
+  @property({
+    type: 'string',
+  })
+  image32?: string;
+
+  @property({
+    type: 'string',
+  })
+  image48?: string;
+
+  @property({
+    type: 'string',
+  })
+  image72?: string;
+
+  @property({
+    type: 'string',
+  })
+  image192?: string;
+
+  @property({
+    type: 'string',
+  })
+  image512?: string;
+
+  @belongsTo(() => WorkspaceSlack)
+  workspaceId: number;
+
+  @belongsTo(() => User)
+  userId: number;
 
   constructor(data?: Partial<UserSlack>) {
     super(data);

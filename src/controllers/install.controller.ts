@@ -14,9 +14,6 @@ export class InstallController {
     public workspaceSlackRepository: WorkspaceSlackRepository,
   ) {}
 
-  static SLACK_CLIENT_ID = process.env.SLACK_CLIENT_ID;
-  static SLACK_CLIENT_SECRET = process.env.SLACK_CLIENT_SECRET;
-
   // Map to `GET /install/slack`
   @get('/api/install/slack', {
     responses: {
@@ -25,16 +22,21 @@ export class InstallController {
       },
     },
   })
-  async slack(@param.query.string('code') code: string): Promise<Response> {
+  async slack(
+    @param.query.string('code') code: string,
+    @param.query.string('redirect_uri') redirectUri: string,
+  ): Promise<Response> {
     let result;
     try {
       result = await new WebClient().oauth.v2.access({
-        client_id: InstallController.SLACK_CLIENT_ID,
-        client_secret: InstallController.SLACK_CLIENT_SECRET,
+        client_id: process.env.SLACK_CLIENT_ID,
+        client_secret: process.env.SLACK_CLIENT_SECRET,
+        redirect_uri: `${process.env.API_URL}/install/slack?redirect_uri=${redirectUri}`,
         code,
       });
 
       if (
+        result === null ||
         !result.ok ||
         result.team === null ||
         result.incoming_webhook === null
@@ -43,7 +45,7 @@ export class InstallController {
       }
 
       const existingWorkspace = await this.workspaceSlackRepository.find({
-        where: {teamId: result.team.id},
+        where: {slackId: result.team.id},
         limit: 1,
       });
       if (existingWorkspace.length === 1) {
@@ -55,7 +57,7 @@ export class InstallController {
       );
       console.log(savedWorkspace);
 
-      this.response.setHeader('Location', '/');
+      this.response.setHeader('Location', redirectUri);
       this.response.status(301).send();
       return this.response;
     } catch (error) {

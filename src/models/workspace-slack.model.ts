@@ -1,18 +1,29 @@
-import {model, property} from '@loopback/repository';
+import {Entity, model, property} from '@loopback/repository';
 import {WebAPICallResult} from '@slack/web-api/dist/WebClient';
-import {Workspace} from './workspace.model';
 
 @model()
-export class WorkspaceSlack extends Workspace {
+export class WorkspaceSlack extends Entity {
   @property({
-    type: 'string',
+    type: 'number',
+    id: true,
+    generated: true,
   })
-  teamId?: string;
+  id?: number;
 
   @property({
     type: 'string',
   })
-  teamName?: string;
+  slackId?: string;
+
+  @property({
+    type: 'string',
+  })
+  name?: string;
+
+  @property({
+    type: 'string',
+  })
+  domain?: string;
 
   @property({
     type: 'string',
@@ -74,6 +85,46 @@ export class WorkspaceSlack extends Workspace {
   })
   incomingWebhookUrl?: string;
 
+  @property({
+    type: 'string',
+  })
+  image34?: string;
+
+  @property({
+    type: 'string',
+  })
+  image44?: string;
+
+  @property({
+    type: 'string',
+  })
+  image68?: string;
+
+  @property({
+    type: 'string',
+  })
+  image88?: string;
+
+  @property({
+    type: 'string',
+  })
+  image102?: string;
+
+  @property({
+    type: 'string',
+  })
+  image132?: string;
+
+  @property({
+    type: 'string',
+  })
+  image230?: string;
+
+  @property({
+    type: 'string',
+  })
+  imageOriginale?: string;
+
   constructor(data?: Partial<WorkspaceSlack>) {
     super(data);
   }
@@ -93,8 +144,8 @@ export class WorkspaceSlack extends Workspace {
 
       if (raw.team !== null) {
         const team = Object(raw.team);
-        workspace.teamId = String(team.id);
-        workspace.teamName = String(team.name);
+        workspace.slackId = String(team.id);
+        workspace.name = String(team.name);
       }
 
       if (raw.incoming_webhook !== null) {
