@@ -164,11 +164,11 @@ export class AuthController {
       },
     },
   })
-  async me(
+  async whoami(
     @inject(AuthenticationBindings.CURRENT_USER)
     currentUser: UserProfile,
-  ): Promise<UserProfile> {
-    return Promise.resolve(currentUser);
+  ): Promise<User> {
+    return this.userRepository.findById(currentUser.id);
   }
 
   // Map to `POST /login/slack`
@@ -301,7 +301,7 @@ export class AuthController {
       if (user.firstname === undefined && user.lastname === undefined) {
         user.firstname = userSlack.name;
       }
-      user = await this.userRepository.create(user);
+      user = await this.userRepository.save(user);
 
       // Save Slack User in DB
       userSlack.userId = Number(user.id);

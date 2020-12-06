@@ -3,9 +3,16 @@ const {WebClient} = require('@slack/web-api');
 
 import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
-import {get, HttpErrors, param, Response, RestBindings} from '@loopback/rest';
+import {
+  HttpErrors,
+  post,
+  requestBody,
+  Response,
+  RestBindings,
+} from '@loopback/rest';
 import {WorkspaceSlack} from '../models';
 import {WorkspaceSlackRepository} from '../repositories';
+import {OAuthRequest} from './auth.controller';
 
 export class InstallController {
   constructor(
@@ -15,24 +22,40 @@ export class InstallController {
   ) {}
 
   // Map to `GET /install/slack`
-  @get('/api/install/slack', {
+  @post('/api/install/slack', {
     responses: {
-      '301': {
-        description: 'Redirect after successful install',
+      '200': {
+        description: 'Successful install',
       },
     },
   })
   async slack(
-    @param.query.string('code') code: string,
-    @param.query.string('redirect_uri') redirectUri: string,
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: {
+            type: 'object',
+            properties: {
+              code: {
+                type: 'string',
+              },
+              redirectUri: {
+                type: 'string',
+              },
+            },
+          },
+        },
+      },
+    })
+    body: OAuthRequest,
   ): Promise<Response> {
     let result;
     try {
       result = await new WebClient().oauth.v2.access({
-        client_id: process.env.SLACK_CLIENT_ID,
-        client_secret: process.env.SLACK_CLIENT_SECRET,
-        redirect_uri: `${process.env.API_URL}/install/slack?redirect_uri=${redirectUri}`,
-        code,
+        client_id: String(process.env.SLACK_CLIENT_ID),
+        client_secret: String(process.env.SLACK_CLIENT_SECRET),
+        redirect_uri: body.redirectUri,
+        code: body.code,
       });
 
       if (
@@ -57,16 +80,10 @@ export class InstallController {
       );
       console.log(savedWorkspace);
 
-      this.response.setHeader('Location', redirectUri);
-      this.response.status(301).send();
+      this.response.status(200).send();
       return this.response;
     } catch (error) {
       console.log(error);
-      if (error.data !== undefined) {
-        throw new HttpErrors.BadRequest(error.data.error);
-      } else if (error.code !== undefined) {
-        throw new HttpErrors.HttpError(error.code);
-      }
       throw error;
     }
   }

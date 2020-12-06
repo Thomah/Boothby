@@ -1,7 +1,8 @@
-import {inject} from '@loopback/core';
-import {DefaultCrudRepository} from '@loopback/repository';
+import {inject, Getter} from '@loopback/core';
+import {DefaultCrudRepository, repository, HasManyRepositoryFactory} from '@loopback/repository';
 import {DbDataSource} from '../datasources';
-import {User, UserRelations} from '../models';
+import {User, UserRelations, UserSlack} from '../models';
+import {UserSlackRepository} from './user-slack.repository';
 
 export type Credentials = {
   email: string;
@@ -13,7 +14,11 @@ export class UserRepository extends DefaultCrudRepository<
   typeof User.prototype.id,
   UserRelations
 > {
-  constructor(@inject('datasources.db') dataSource: DbDataSource) {
+
+  public readonly usersSlack: HasManyRepositoryFactory<UserSlack, typeof User.prototype.id>;
+
+  constructor(@inject('datasources.db') dataSource: DbDataSource, @repository.getter('UserSlackRepository') protected userSlackRepositoryGetter: Getter<UserSlackRepository>,) {
     super(User, dataSource);
+    this.usersSlack = this.createHasManyRepositoryFactoryFor('usersSlack', userSlackRepositoryGetter,);
   }
 }

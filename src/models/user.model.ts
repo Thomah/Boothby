@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, hasMany} from '@loopback/repository';
+import {UserSlack} from './user-slack.model';
 
 @model()
 export class User extends Entity {
@@ -41,6 +42,9 @@ export class User extends Entity {
     type: 'string',
   })
   avatarUrl?: string;
+
+  @hasMany(() => UserSlack)
+  usersSlack: UserSlack[];
 
   constructor(data?: Partial<User>) {
     super(data);
