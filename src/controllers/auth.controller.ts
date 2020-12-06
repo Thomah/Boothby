@@ -140,10 +140,7 @@ export class AuthController {
   ): Promise<{token: string}> {
     // make sure user exist,password should be valid
     const user = await this.userService.verifyCredentials(credentials);
-    // console.log(user);
     const userProfile = this.userService.convertToUserProfile(user);
-    // console.log(userProfile);
-
     const token = await this.jwtService.generateToken(userProfile);
     return Promise.resolve({token: token});
   }
@@ -296,7 +293,9 @@ export class AuthController {
         user.username = user.email;
       }
       if (user.password === undefined) {
-        user.password = this.randomService.random(8);
+        user.password = await this.hasher.hashPassword(
+          String(this.randomService.random(8)),
+        );
       }
       if (user.firstname === undefined && user.lastname === undefined) {
         user.firstname = userSlack.name;

@@ -1,3 +1,4 @@
+import {inject} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -16,11 +17,15 @@ import {
   put,
   requestBody,
 } from '@loopback/rest';
+import {PasswordHasherBindings} from '../keys';
 import {User} from '../models';
 import {UserRepository} from '../repositories';
+import {BcryptHasher} from '../services/hash.password';
 
 export class UserController {
   constructor(
+    @inject(PasswordHasherBindings.PASSWORD_HASHER)
+    public hasher: BcryptHasher,
     @repository(UserRepository)
     public userRepository: UserRepository,
   ) {}
@@ -139,6 +144,9 @@ export class UserController {
     })
     user: User,
   ): Promise<void> {
+    if (user.password) {
+      user.password = await this.hasher.hashPassword(String(user.password));
+    }
     await this.userRepository.updateById(id, user);
   }
 

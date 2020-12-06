@@ -75,10 +75,9 @@ export class InstallController {
         throw new HttpErrors.BadRequest('Workspace is already registered');
       }
 
-      const savedWorkspace = await this.workspaceSlackRepository.save(
+      await this.workspaceSlackRepository.save(
         WorkspaceSlack.fromSlack(result),
       );
-      console.log(savedWorkspace);
 
       this.response.status(200).send();
       return this.response;
