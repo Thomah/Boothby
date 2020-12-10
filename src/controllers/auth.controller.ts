@@ -289,6 +289,9 @@ export class AuthController {
       }
       user.email = String(userSlack.email);
       user.avatarUrl = userSlack.image512;
+      if (user.role === undefined) {
+        user.role = 'member';
+      }
       if (user.username === undefined) {
         user.username = user.email;
       }
@@ -297,8 +300,8 @@ export class AuthController {
           String(this.randomService.random(8)),
         );
       }
-      if (user.firstname === undefined && user.lastname === undefined) {
-        user.firstname = userSlack.name;
+      if (user.name === undefined) {
+        user.name = userSlack.name;
       }
       user = await this.userRepository.save(user);
 

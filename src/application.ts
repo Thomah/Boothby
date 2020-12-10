@@ -2,11 +2,13 @@ import {
   AuthenticationComponent,
   registerAuthenticationStrategy,
 } from '@loopback/authentication';
+import {SECURITY_SCHEME_SPEC} from '@loopback/authentication-jwt';
 import {
-  SECURITY_SCHEME_SPEC,
-  User,
-  UserRepository,
-} from '@loopback/authentication-jwt';
+  AuthorizationComponent,
+  AuthorizationDecision,
+  AuthorizationOptions,
+  AuthorizationTags,
+} from '@loopback/authorization';
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig} from '@loopback/core';
 import {RepositoryMixin, SchemaMigrationOptions} from '@loopback/repository';
@@ -26,8 +28,11 @@ import {
   TokenServiceConstants,
   UserServiceBindings,
 } from './keys';
+import {User} from './models';
+import {UserRepository} from './repositories';
 import {MySequence} from './sequence';
 import {RandomService} from './services';
+import {BoothbyAuthorizer} from './services/authorization.provider';
 import {BcryptHasher} from './services/hash.password';
 import {JWTService} from './services/jwt.service';
 import {MyUserService} from './services/user.service';
@@ -46,65 +51,22 @@ export class BoothbyApplication extends BootMixin(
     // Add security spec
     this.addSecuritySpec();
 
+    // Add authenticatioon component
     this.component(AuthenticationComponent);
     registerAuthenticationStrategy(this, JWTStrategy);
+
+    // Add authorization component
+    const authorizeOptions: AuthorizationOptions = {
+      precedence: AuthorizationDecision.DENY,
+      defaultDecision: AuthorizationDecision.DENY,
+    };
+    const binding = this.component(AuthorizationComponent);
+    this.configure(binding.key).to(authorizeOptions);
 
     // Set up the custom sequence
     this.sequence(MySequence);
 
     // Set up default home page
-    this.static(
-      '/vendors/bootstrap/',
-      path.join(__dirname, '../node_modules/bootstrap/dist/css/'),
-    );
-    this.static(
-      '/vendors/bootstrap/bootstrap.bundle.min.js',
-      path.join(
-        __dirname,
-        '../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js',
-      ),
-    );
-    this.static(
-      '/vendors/fontawesome/all.min.css',
-      path.join(
-        __dirname,
-        '../node_modules/@fortawesome/fontawesome-free/css/all.min.css',
-      ),
-    );
-    this.static(
-      '/vendors/fontawesome/all.min.js',
-      path.join(
-        __dirname,
-        '../node_modules/@fortawesome/fontawesome-free/js/all.min.js',
-      ),
-    );
-    this.static(
-      '/vendors/nprogress/nprogress.css',
-      path.join(__dirname, '../node_modules/nprogress/nprogress.css'),
-    );
-    this.static(
-      '/vendors/nprogress/nprogress.js',
-      path.join(__dirname, '../node_modules/nprogress/nprogress.js'),
-    );
-    this.static(
-      '/vendors/jquery/jquery.min.js',
-      path.join(__dirname, '../node_modules/jquery/dist/jquery.min.js'),
-    );
-    this.static(
-      '/vendors/fastclick/fastclick.js',
-      path.join(__dirname, '../node_modules/fastclick/lib/fastclick.js'),
-    );
-    this.static(
-      '/vendors/gentelella/custom.min.css',
-      path.join(
-        __dirname,
-        '../node_modules/gentelella/build/css/custom.min.css',
-      ),
-    );
-    this.static(
-      '/vendors/gentelella/custom.min.js',
-      path.join(__dirname, '../node_modules/gentelella/build/js/custom.min.js'),
-    );
     this.static('/', path.join(__dirname, '../public'));
 
     // Customize @loopback/rest-explorer configuration here
@@ -132,9 +94,12 @@ export class BoothbyApplication extends BootMixin(
     const userRepo = await this.getRepository(UserRepository);
     const found = await userRepo.findOne({where: {username: 'admin'}});
     if (!found) {
-      const admin = new User({username: 'admin', email: 'admin@boothby.fr'});
+      const admin = new User({
+        role: 'ADMIN',
+        username: 'admin',
+        email: 'admin@boothby.fr',
+      });
       admin.password = await hash('admin', await genSalt());
-      admin.email = 'admin@boothby.fr';
       await userRepo.create(admin);
     }
   }
@@ -151,6 +116,10 @@ export class BoothbyApplication extends BootMixin(
       TokenServiceConstants.TOKEN_EXPIRES_IN_VALUE,
     );
     this.bind(RandomServiceBindings.RANDOM_SERVICE).toClass(RandomService);
+
+    this.bind('authorizationProviders.boothby-authorizer-provider')
+      .toProvider(BoothbyAuthorizer)
+      .tag(AuthorizationTags.AUTHORIZER);
   }
 
   addSecuritySpec(): void {

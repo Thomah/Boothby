@@ -1,3 +1,5 @@
+import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {inject} from '@loopback/core';
 import {
   Count,
@@ -30,6 +32,8 @@ export class UserController {
     public userRepository: UserRepository,
   ) {}
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @post('/api/users', {
     responses: {
       '200': {
@@ -54,6 +58,8 @@ export class UserController {
     return this.userRepository.create(user);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @get('/api/users/count', {
     responses: {
       '200': {
@@ -66,6 +72,8 @@ export class UserController {
     return this.userRepository.count(where);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @get('/api/users', {
     responses: {
       '200': {
@@ -85,6 +93,8 @@ export class UserController {
     return this.userRepository.find(filter);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @patch('/api/users', {
     responses: {
       '200': {
@@ -107,6 +117,8 @@ export class UserController {
     return this.userRepository.updateAll(user, where);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @get('/api/users/{id}', {
     responses: {
       '200': {
@@ -126,6 +138,8 @@ export class UserController {
     return this.userRepository.findById(id, filter);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @patch('/api/users/{id}', {
     responses: {
       '204': {
@@ -150,6 +164,8 @@ export class UserController {
     await this.userRepository.updateById(id, user);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @put('/api/users/{id}', {
     responses: {
       '204': {
@@ -164,6 +180,8 @@ export class UserController {
     await this.userRepository.replaceById(id, user);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @del('/api/users/{id}', {
     responses: {
       '204': {

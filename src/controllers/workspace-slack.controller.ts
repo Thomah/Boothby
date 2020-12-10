@@ -1,3 +1,7 @@
+import {authenticate, AuthenticationBindings} from '@loopback/authentication';
+import {OPERATION_SECURITY_SPEC} from '@loopback/authentication-jwt';
+import {authorize} from '@loopback/authorization';
+import {inject} from '@loopback/core';
 import {
   Count,
   CountSchema,
@@ -10,21 +14,26 @@ import {
   del,
   get,
   getModelSchemaRef,
+  HttpErrors,
   param,
   patch,
   post,
   put,
   requestBody,
 } from '@loopback/rest';
-import {WorkspaceSlack} from '../models';
-import {WorkspaceSlackRepository} from '../repositories';
+import {UserSecurity, WorkspaceSlack} from '../models';
+import {UserSlackRepository, WorkspaceSlackRepository} from '../repositories';
 
 export class WorkspaceSlackController {
   constructor(
+    @repository(UserSlackRepository)
+    public userSlackRepository: UserSlackRepository,
     @repository(WorkspaceSlackRepository)
     public workspaceSlackRepository: WorkspaceSlackRepository,
   ) {}
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @post('/api/workspaces/slack', {
     responses: {
       '200': {
@@ -51,6 +60,8 @@ export class WorkspaceSlackController {
     return this.workspaceSlackRepository.create(workspaceSlack);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @get('/api/workspaces/slack/count', {
     responses: {
       '200': {
@@ -65,6 +76,8 @@ export class WorkspaceSlackController {
     return this.workspaceSlackRepository.count(where);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @get('/api/workspaces/slack', {
     responses: {
       '200': {
@@ -88,6 +101,8 @@ export class WorkspaceSlackController {
     return this.workspaceSlackRepository.find(filter);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @patch('/api/workspaces/slack', {
     responses: {
       '200': {
@@ -110,7 +125,10 @@ export class WorkspaceSlackController {
     return this.workspaceSlackRepository.updateAll(workspaceSlack, where);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['MEMBER', 'ADMIN']})
   @get('/api/workspaces/slack/{id}', {
+    security: OPERATION_SECURITY_SPEC,
     responses: {
       '200': {
         description: 'WorkspaceSlack model instance',
@@ -123,13 +141,24 @@ export class WorkspaceSlackController {
     },
   })
   async findById(
+    @inject(AuthenticationBindings.CURRENT_USER)
+    currentUser: UserSecurity,
     @param.path.number('id') id: number,
     @param.filter(WorkspaceSlack, {exclude: 'where'})
     filter?: FilterExcludingWhere<WorkspaceSlack>,
   ): Promise<WorkspaceSlack> {
-    return this.workspaceSlackRepository.findById(id, filter);
+    const usersSlack = await this.userSlackRepository.find({
+      where: {userId: currentUser.id, workspaceId: id},
+    });
+    if (usersSlack.length > 0 || currentUser.role === 'ADMIN') {
+      return this.workspaceSlackRepository.findById(id, filter);
+    } else {
+      throw new HttpErrors.NotFound();
+    }
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @patch('/api/workspaces/slack/{id}', {
     responses: {
       '204': {
@@ -151,6 +180,8 @@ export class WorkspaceSlackController {
     await this.workspaceSlackRepository.updateById(id, workspaceSlack);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @put('/api/workspaces/slack/{id}', {
     responses: {
       '204': {
@@ -165,6 +196,8 @@ export class WorkspaceSlackController {
     await this.workspaceSlackRepository.replaceById(id, workspaceSlack);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @del('/api/workspaces/slack/{id}', {
     responses: {
       '204': {

@@ -1,4 +1,4 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
+import {Entity, hasMany, model, property} from '@loopback/repository';
 import {UserSlack} from './user-slack.model';
 
 @model()
@@ -8,7 +8,12 @@ export class User extends Entity {
     id: true,
     generated: true,
   })
-  id?: number;
+  id: number;
+
+  @property({
+    type: 'string',
+  })
+  role: string;
 
   @property({
     type: 'string',
@@ -27,6 +32,11 @@ export class User extends Entity {
     required: true,
   })
   email: string;
+
+  @property({
+    type: 'string',
+  })
+  name?: string;
 
   @property({
     type: 'string',

@@ -1,3 +1,5 @@
+import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {
   Count,
   CountSchema,
@@ -23,6 +25,8 @@ export class UserUserSlackController {
     @repository(UserRepository) protected userRepository: UserRepository,
   ) {}
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @get('/api/users/{id}/userslack', {
     responses: {
       '200': {
@@ -42,6 +46,8 @@ export class UserUserSlackController {
     return this.userRepository.usersSlack(id).find(filter);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @post('/api/users/{id}/userslack', {
     responses: {
       '200': {
@@ -68,6 +74,8 @@ export class UserUserSlackController {
     return this.userRepository.usersSlack(id).create(userSlack);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @patch('/api/users/{id}/userslack', {
     responses: {
       '200': {
@@ -92,6 +100,8 @@ export class UserUserSlackController {
     return this.userRepository.usersSlack(id).patch(userSlack, where);
   }
 
+  @authenticate('jwt')
+  @authorize({allowedRoles: ['ADMIN']})
   @del('/api/users/{id}/userslack', {
     responses: {
       '200': {

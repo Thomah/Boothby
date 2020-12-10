@@ -2,9 +2,10 @@ import {UserService} from '@loopback/authentication';
 import {inject} from '@loopback/core';
 import {repository} from '@loopback/repository';
 import {HttpErrors} from '@loopback/rest';
-import {securityId, UserProfile} from '@loopback/security';
+import {securityId} from '@loopback/security';
 import {PasswordHasherBindings} from '../keys';
 import {User} from '../models';
+import {UserSecurity} from '../models/user-security.model';
 import {Credentials, UserRepository} from '../repositories/user.repository';
 import {BcryptHasher} from './hash.password';
 
@@ -35,12 +36,13 @@ export class MyUserService implements UserService<User, Credentials> {
       throw new HttpErrors.Unauthorized('password is not valid');
     return foundUser;
   }
-  convertToUserProfile(user: User): UserProfile {
+  convertToUserProfile(user: User): UserSecurity {
     return {
+      id: user.id,
       [securityId]: user.id!.toString(),
       name: user.username,
-      id: user.id,
       email: user.email,
+      role: user.role,
     };
     // throw new Error('Method not implemented.');
   }
