@@ -4,3 +4,4 @@ export * from './ping.controller';
 export * from './workspace-slack.controller';
 export * from './user-user-slack.controller';
 export * from './profile.controller';
+export * from './dialog.controller';

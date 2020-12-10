@@ -16,15 +16,9 @@ export class Dialog extends Entity {
   name: string;
 
   @property({
-    type: 'string',
-  })
-  category?: string;
-
-  @property({
     type: 'number',
   })
   ordering?: number;
-
 
   constructor(data?: Partial<Dialog>) {
     super(data);
