@@ -290,7 +290,7 @@ export class AuthController {
       user.email = String(userSlack.email);
       user.avatarUrl = userSlack.image512;
       if (user.role === undefined) {
-        user.role = 'member';
+        user.role = 'MEMBER';
       }
       if (user.username === undefined) {
         user.username = user.email;

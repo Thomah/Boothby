@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, hasMany, model, property} from '@loopback/repository';
+import {DialogLine} from './dialog-line.model';
 
 @model()
 export class Dialog extends Entity {
@@ -19,6 +20,9 @@ export class Dialog extends Entity {
     type: 'number',
   })
   ordering?: number;
+
+  @hasMany(() => DialogLine)
+  lines: DialogLine[];
 
   constructor(data?: Partial<Dialog>) {
     super(data);
