@@ -1,7 +1,7 @@
 import {
   Client,
   createRestAppClient,
-  givenHttpServerConfig,
+  givenHttpServerConfig
 } from '@loopback/testlab';
 import {BoothbyApplication} from '../..';
 
@@ -10,7 +10,7 @@ export async function setupApplication(): Promise<AppWithClient> {
     // Customize the server configuration here.
     // Empty values (undefined, '') will be ignored by the helper.
     //
-    host: '127.0.0.1',
+    host: 'localhost',
     port: 3000,
   });
 
