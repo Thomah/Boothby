@@ -2,15 +2,15 @@ import {Getter, inject} from '@loopback/core';
 import {
   BelongsToAccessor,
   DefaultCrudRepository,
-  HasManyThroughRepositoryFactory,
-  repository,
+
+  HasOneRepositoryFactory, repository
 } from '@loopback/repository';
 import {DbDataSource} from '../datasources';
 import {
   Dialog,
   DialogLine,
   DialogLineRelations,
-  DialogLineTransition,
+  DialogLineTransition
 } from '../models';
 import {DialogLineTransitionRepository} from './dialog-line-transition.repository';
 import {DialogRepository} from './dialog.repository';
@@ -19,18 +19,13 @@ export class DialogLineRepository extends DefaultCrudRepository<
   DialogLine,
   typeof DialogLine.prototype.id,
   DialogLineRelations
-> {
+  > {
   public readonly dialog: BelongsToAccessor<
     Dialog,
     typeof DialogLine.prototype.id
   >;
 
-  public readonly next: HasManyThroughRepositoryFactory<
-    DialogLine,
-    typeof DialogLine.prototype.id,
-    DialogLineTransition,
-    typeof DialogLine.prototype.id
-  >;
+  public readonly nextTransition: HasOneRepositoryFactory<DialogLineTransition, typeof DialogLine.prototype.id>;
 
   constructor(
     @inject('datasources.db') dataSource: DbDataSource,
@@ -42,11 +37,8 @@ export class DialogLineRepository extends DefaultCrudRepository<
     protected dialogLineRepositoryGetter: Getter<DialogLineRepository>,
   ) {
     super(DialogLine, dataSource);
-    this.next = this.createHasManyThroughRepositoryFactoryFor(
-      'next',
-      dialogLineRepositoryGetter,
-      dialogLineTransitionRepositoryGetter,
-    );
+    this.nextTransition = this.createHasOneRepositoryFactoryFor('nextTransition', dialogLineTransitionRepositoryGetter);
+    this.registerInclusionResolver('nextTransition', this.nextTransition.inclusionResolver);
     this.dialog = this.createBelongsToAccessorFor(
       'dialog',
       dialogRepositoryGetter,

@@ -7,4 +7,5 @@ export * from './ping.controller';
 export * from './profile.controller';
 export * from './user-user-slack.controller';
 export * from './workspace-slack.controller';
-export * from './dialog-line-dialog-line.controller';
+
+export * from './dialog-line-transition.controller';

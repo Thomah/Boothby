@@ -17,6 +17,8 @@ PGPORT=<database port (usually 5432)>
 PGDATABASE=<database name>
 PGUSER=<database user>
 PGPASSWORD=<database users password>
+SLACK_CLIENT_ID=<Slack App client ID>
+SLACK_CLIENT_SECRET=<Slack App client secret>
 ```
 
 ## Install dependencies

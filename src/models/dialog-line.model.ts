@@ -1,11 +1,11 @@
 import {
   belongsTo,
   Entity,
-  hasMany,
+
+
   model,
-  property,
+  property
 } from '@loopback/repository';
-import {DialogLineTransition} from './dialog-line-transition.model';
 import {Dialog} from './dialog.model';
 
 @model()
@@ -25,14 +25,10 @@ export class DialogLine extends Entity {
   @belongsTo(() => Dialog)
   dialogId: number;
 
-  @hasMany(() => DialogLine, {
-    through: {
-      model: () => DialogLineTransition,
-      keyFrom: 'previous',
-      keyTo: 'next',
-    },
+  @property({
+    type: 'number',
   })
-  next: DialogLine[];
+  previousTransition?: number;
 
   constructor(data?: Partial<DialogLine>) {
     super(data);

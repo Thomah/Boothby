@@ -1,4 +1,5 @@
 import {Entity, hasMany, model, property} from '@loopback/repository';
+import {DialogLineTransition} from './dialog-line-transition.model';
 import {DialogLine} from './dialog-line.model';
 
 @model()
@@ -21,8 +22,16 @@ export class Dialog extends Entity {
   })
   ordering?: number;
 
+  @property({
+    type: 'number',
+  })
+  firstLine?: number;
+
   @hasMany(() => DialogLine)
   lines: DialogLine[];
+
+  @hasMany(() => DialogLineTransition)
+  transitions: DialogLineTransition[];
 
   constructor(data?: Partial<Dialog>) {
     super(data);
